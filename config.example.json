@@ -1,0 +1,8 @@
+{
+	"token": "discord token",
+	"id": "discord bot ID",
+	"huggingface_api_keys": [
+		"some api keys",
+		"you can use as many as you want"
+	]
+}
