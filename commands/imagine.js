@@ -69,30 +69,31 @@ module.exports = {
 		});
 		await interaction.editReply({
 			embeds: [
-				new EmbedBuilder().setFields(
-					{
-						name: "Prompt",
-						value: escapeMarkdown(interaction.options.getString("prompt")),
-						inline: false
-					},
-					{
-						name: "Negative prompt",
-						value: escapeMarkdown(interaction.options.getString("negative_prompt") || "") || "`None`",
-						inline: false
-					},
-					{
-						name: "Style",
-						value: interaction.options.getString("style") || "(No style)",
-						inline: false
-					},
-					{
-						name: "Author",
-						value: `<@${interaction.user.id}>`,
-						inline: false
-					}
-				)
+				new EmbedBuilder()
+					.setFields(
+						{
+							name: "Prompt",
+							value: escapeMarkdown(interaction.options.getString("prompt")),
+							inline: false
+						},
+						{
+							name: "Negative prompt",
+							value: escapeMarkdown(interaction.options.getString("negative_prompt") || "") || "`None`",
+							inline: false
+						},
+						{
+							name: "Style",
+							value: interaction.options.getString("style") || "(No style)",
+							inline: false
+						},
+						{
+							name: "Author",
+							value: `<@${interaction.user.id}>`,
+							inline: false
+						}
+					)
+					.setTimestamp()
 			],
-			content: `**${interaction.options.getString("prompt")}** - <@${interaction.user.id}>`,
 			files: attachments
 		});
 	}
