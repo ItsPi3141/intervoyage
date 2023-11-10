@@ -77,7 +77,7 @@ module.exports = {
 					},
 					{
 						name: "Negative prompt",
-						value: escapeMarkdown(interaction.options.getString("negative_prompt")) || "`None`",
+						value: escapeMarkdown(interaction.options.getString("negative_prompt") || "") || "`None`",
 						inline: false
 					},
 					{
