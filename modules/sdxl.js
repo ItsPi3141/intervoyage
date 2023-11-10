@@ -31,8 +31,10 @@ function createImage(/** @type {string} */ prompt, /** @type {string} */ style =
 					})
 				);
 			} else if (parsedJson.msg && parsedJson.msg == "process_completed") {
-				if (parsedJson.error) {
-					resolve("error");
+				if (parsedJson.output.error) {
+					resolve({
+						error: parsedJson.output.error
+					});
 				} else {
 					resolve(parsedJson.output.data[0]);
 				}

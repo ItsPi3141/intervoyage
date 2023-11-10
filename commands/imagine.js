@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
+const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, Colors, escapeMarkdown } = require("discord.js");
 const { createImage } = require("../modules/sdxl");
 
 module.exports = {
@@ -58,14 +58,40 @@ module.exports = {
 			interaction.options.getString("style", false) || "(No style)",
 			interaction.options.getString("negative_prompt", false) || ""
 		);
-		if (images == "error") {
-			return interaction.editReply("Something went wrong. Perhaps try a different prompt.");
+		if (images.error) {
+			return interaction.editReply({
+				embeds: [new EmbedBuilder().setTitle("⚠️ Error").setDescription(images.error).setColor(Colors.Gold).setTimestamp()]
+			});
 		}
 		var attachments = [];
 		images.forEach((img, index) => {
 			attachments.push(new AttachmentBuilder(Buffer.from(img.toString().split(",").slice(1).join(","), "base64"), { name: `image${index}.png` }));
 		});
 		await interaction.editReply({
+			embeds: [
+				new EmbedBuilder().setFields(
+					{
+						name: "Prompt",
+						value: escapeMarkdown(interaction.options.getString("prompt")),
+						inline: false
+					},
+					{
+						name: "Negative prompt",
+						value: escapeMarkdown(interaction.options.getString("negative_prompt")) || "`None`",
+						inline: false
+					},
+					{
+						name: "Style",
+						value: interaction.options.getString("style") || "(No style)",
+						inline: false
+					},
+					{
+						name: "Author",
+						value: `<@${interaction.user.id}>`,
+						inline: false
+					}
+				)
+			],
 			content: `**${interaction.options.getString("prompt")}** - <@${interaction.user.id}>`,
 			files: attachments
 		});
