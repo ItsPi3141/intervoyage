@@ -52,7 +52,7 @@ module.exports = {
 			)
 		),
 	async execute(/** @type {import("discord.js").Interaction} */ interaction) {
-		interaction.deferReply();
+		await interaction.deferReply();
 		var images = await createImage(
 			interaction.options.getString("prompt", true),
 			interaction.options.getString("style", false) || "(No style)",
