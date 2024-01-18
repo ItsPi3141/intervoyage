@@ -7,7 +7,6 @@ module.exports = {
 		if (![interaction.message.author.id, interaction.client.application.owner.id].includes(interaction.user.id)) {
 			return;
 		}
-		await interaction.respond();
 		return interaction.message.delete();
 	}
 };
