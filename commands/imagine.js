@@ -1,5 +1,6 @@
-const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, Colors, escapeMarkdown } = require("discord.js");
+const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, Colors, escapeMarkdown, ActionRowBuilder } = require("discord.js");
 const { createImage } = require("../modules/sdxl");
+const { data: deleteButton } = require("../buttonInteractions/delete");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -94,7 +95,8 @@ module.exports = {
 					)
 					.setTimestamp()
 			],
-			files: attachments
+			files: attachments,
+			components: [new ActionRowBuilder().addComponents(deleteButton)]
 		});
 	}
 };

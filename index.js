@@ -20,6 +20,21 @@ for (const file of commandFiles) {
 	}
 }
 
+// Load button interaction handlers
+client.buttons = new Collection();
+const buttonsPath = path.join(__dirname, "buttonInteractions");
+const buttonFiles = fs.readdirSync(buttonsPath).filter((file) => file.endsWith(".js"));
+
+for (const file of buttonFiles) {
+	const filePath = path.join(buttonsPath, file);
+	const button = require(filePath);
+	if ("data" in button && "execute" in button) {
+		client.buttons.set(button.data.data.custom_id, button);
+	} else {
+		console.log(`[WARNING] The button handler at ${filePath} is missing a required "data" or "execute" property.`);
+	}
+}
+
 client.on(Events.ClientReady, () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 	client.user.setActivity("an art competition", { type: ActivityType.Competing });
@@ -28,20 +43,32 @@ client.on(Events.ClientReady, () => {
 
 // Handle chat slash command
 client.on(Events.InteractionCreate, async (interaction) => {
-	if (!interaction.isChatInputCommand()) return;
-	const command = interaction.client.commands.get(interaction.commandName);
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
-	}
-	try {
-		await command.execute(interaction, client);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
-		} else {
-			await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
+	if (interaction.isChatInputCommand()) {
+		const command = interaction.client.commands.get(interaction.commandName);
+		if (!command) {
+			console.error(`No command matching ${interaction.commandName} was found.`);
+			return;
+		}
+		try {
+			await command.execute(interaction, client);
+		} catch (error) {
+			console.error(error);
+			if (interaction.replied || interaction.deferred) {
+				await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
+			} else {
+				await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
+			}
+		}
+	} else if (interaction.isButton()) {
+		const button = interaction.client.buttons.get(interaction.customId);
+		if (!button) {
+			console.error(`No button interaction matching ${interaction.customId} was found.`);
+			return;
+		}
+		try {
+			await button.execute(interaction, client);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 });
@@ -78,7 +105,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 })();
 
 client.login(token);
-
 
 // please do not crash my bot
 process.on("unhandledRejection", (reason, p) => {

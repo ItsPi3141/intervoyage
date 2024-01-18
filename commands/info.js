@@ -3,7 +3,7 @@ const config = require("../config.json");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("info").setDescription("I'm better than that freemium image generation AI bot fr"),
-	async execute(/** @type {import("discord.js").Interaction} */ interaction, /** @type {import("discord.js").Client} */ client) {
+	async execute(/** @type {import("discord.js").Interaction} */ interaction) {
 		await interaction.client.application.fetch();
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
