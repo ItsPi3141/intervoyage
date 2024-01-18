@@ -8,11 +8,12 @@ const params = {
 
 function createImage(/** @type {string} */ prompt, /** @type {string} */ style = "(No style)", /** @type {string} */ negative_prompt = "") {
 	const session_hash = Math.random().toString(36).substring(2);
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		var ws = new WebSocket("wss://google-sdxl.hf.space/queue/join");
 		ws.addEventListener("message", (msg) => {
 			// Messages are always JSON
 			var parsedJson = JSON.parse(msg.data);
+			console.log(parsedJson);
 
 			if (parsedJson.msg && parsedJson.msg == "send_hash") {
 				ws.send(
@@ -38,6 +39,8 @@ function createImage(/** @type {string} */ prompt, /** @type {string} */ style =
 				} else {
 					resolve(parsedJson.output.data[0]);
 				}
+			} else if (parsedJson.msg && parsedJson.msg == "queue_full") {
+				reject();
 			}
 		});
 	});

@@ -54,11 +54,20 @@ module.exports = {
 		),
 	async execute(/** @type {import("discord.js").Interaction} */ interaction) {
 		await interaction.deferReply();
-		var images = await createImage(
-			interaction.options.getString("prompt", true),
-			interaction.options.getString("style", false) || "(No style)",
-			interaction.options.getString("negative_prompt", false) || ""
-		);
+		var success = false;
+		var images;
+		while (!success) {
+			await createImage(
+				interaction.options.getString("prompt", true),
+				interaction.options.getString("style", false) || "(No style)",
+				interaction.options.getString("negative_prompt", false) || ""
+			)
+				.then((i) => {
+					success = true;
+					images = i;
+				})
+				.catch(() => (success = false));
+		}
 		if (images.error) {
 			return interaction.editReply({
 				embeds: [new EmbedBuilder().setTitle("⚠️ Error").setDescription(images.error).setColor(Colors.Gold).setTimestamp()]
