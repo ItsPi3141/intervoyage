@@ -1,6 +1,6 @@
 <h1 align="center">Intervoyage<br><img src="assets/logo.png" width=128></h1>
 
-Intervoyage is an image generation AI bot with no image generation limit, unlike the other popular bot that gives you a free trial of 25 generations. Though it is not as good, it still creates images with good quality.
+Intervoyage is an image generation AI bot with no image generation limit, unlike the other popular bot that gives you a free trial of 25 generations. Though it is not as good, it still creates images with decent quality.
 
 Powered by [Openjourney](https://huggingface.co/prompthero/openjourney)
 
