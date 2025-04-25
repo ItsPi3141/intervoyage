@@ -84,7 +84,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
 		if ("data" in command && "execute" in command) {
-			commands.push(command.data.toJSON());
+			commands.push({
+				...command.data.toJSON(),
+				// https://discord.com/developers/docs/resources/application#application-object-application-integration-types
+				integration_types: [0, 1], // 0: guild, 1: user
+				// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types
+				contexts: [0, 1, 2], // 0: guild, 1: bot dm, 2: gdm & dm
+			});
 		} else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
